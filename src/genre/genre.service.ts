@@ -1,26 +1,50 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Genre } from './entities/genre.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class GenreService {
-  create(createGenreDto: CreateGenreDto) {
-    return 'This action adds a new genre';
+  constructor (
+    @InjectRepository(Genre) private readonly genreRepository: Repository<Genre>
+  ) {}
+
+  async create(createGenreDto: CreateGenreDto) {
+    const genre = this.genreRepository.create(createGenreDto);
+    return this.genreRepository.save(genre);
   }
 
-  findAll() {
-    return `This action returns all genre`;
+  async findAll() {
+    return this.genreRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} genre`;
+
+  async findOne(id: number) {
+    const found = await this.genreRepository.findOne({ where: { id: id } });
+    if (!found) {
+      throw new NotFoundException(`La catégorie avec l'id n°${id} n'existe pas.`);
+    }
+    return found;
   }
 
-  update(id: number, updateGenreDto: UpdateGenreDto) {
-    return `This action updates a #${id} genre`;
+  async update(id: number, updateGenreDto: UpdateGenreDto) {
+    const genreToUpdate = await this.genreRepository.findOne({
+      where: { id: id },
+    });
+    if (!genreToUpdate) {
+      throw new NotFoundException(`La catégorie avec l'id n°${id} n'existe pas.`);
+    }
+    Object.assign(genreToUpdate, updateGenreDto);
+    return await this.genreRepository.save(genreToUpdate);
   }
+  async remove(id: number) {
+    const result = await this.genreRepository.delete(id);
 
-  remove(id: number) {
-    return `This action removes a #${id} genre`;
+    if (result.affected === 0) {
+      throw new NotFoundException(`La catégorie avec l'id n°${id} n'existe pas.`);
+    }
+    return `La catégorie avec l'id n°${id} a été supprimée avec succès.`;
   }
 }

@@ -6,6 +6,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { GenreModule } from './genre/genre.module';
 import { ProductModule } from './product/product.module';
+import { Genre } from './genre/entities/genre.entity';
+import { Product } from './product/entities/product.entity';
+import { User } from './user/entities/user.entity';
 
 @Module({
   imports: [
@@ -17,7 +20,7 @@ import { ProductModule } from './product/product.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      entities: [],
+      entities: [Genre, Product, User],
       synchronize: false,
     }),
     UserModule,
