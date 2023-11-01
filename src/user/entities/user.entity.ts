@@ -19,6 +19,4 @@ export class User {
     @Column({ type: 'char', length: 60 })
     password: string;
 
-    @OneToMany(() => Product, product => product.user)
-    products: Product[];
 }

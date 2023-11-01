@@ -1,8 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
 import { GenreService } from './genre.service';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
+import { log } from 'console';
 
+@ApiTags('genre')
+@UseGuards(AuthGuard('jwt')) 
 @Controller('genre')
 export class GenreController {
   constructor(private readonly genreService: GenreService) {}
@@ -13,7 +18,10 @@ export class GenreController {
   }
 
   @Get()
-  findAll() {
+  findAll(@Request() req) {
+    const name = req.user.name;
+    console.log(`bonjour ${name}`);
+    
     return this.genreService.findAll();
   }
 

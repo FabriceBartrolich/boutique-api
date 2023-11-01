@@ -18,4 +18,6 @@ export class CreateProductDto {
     @Min(0)
     @IsNotEmpty()
     quantity: number;
+
+    
 }
