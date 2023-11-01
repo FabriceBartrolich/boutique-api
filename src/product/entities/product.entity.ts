@@ -17,7 +17,6 @@ export class Product {
     @Column({ type: 'int' })
     quantity: number;
 
-   
 
     @ManyToOne(() => Genre, genre => genre.products, {eager: true})
     @JoinColumn({ name: 'genre_id' })

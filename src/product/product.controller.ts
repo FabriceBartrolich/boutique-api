@@ -31,7 +31,9 @@ export class ProductController {
   @Patch(':id')
   @UseGuards(AuthGuard('jwt')) 
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
+    console.log("Test", id);
+    
+    return this.productService.update(id, updateProductDto);
   }
 
   @Delete(':id')

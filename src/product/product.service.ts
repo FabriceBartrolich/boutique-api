@@ -32,11 +32,14 @@ async findOne(id: number) {
     return found;
 }
 
-async update(id: number, updateProductDto: UpdateProductDto) {
-    const productToUpdate = await this.productRepository.findOne({ where: { id: id } });
+async update(id: any, updateProductDto: UpdateProductDto) {
+  // console.log("Test", id);
+  
+    const productToUpdate = await this.productRepository.findOne({ where: { id: parseInt(id,10) } });
     if (!productToUpdate) {
       throw new NotFoundException(`Le produit avec l'id n°${id} n'existe pas.`);
     }
+    console.log("Test", productToUpdate);
     Object.assign(productToUpdate, updateProductDto);
     return this.productRepository.save(productToUpdate);
 }
@@ -45,6 +48,6 @@ async update(id: number, updateProductDto: UpdateProductDto) {
     if (result.affected === 0) {
       throw new NotFoundException(`Le produit avec l'id n°${id} n'existe pas.`);
     }
-    return `Le produit avec l'id n°${id} a été supprimé avec succès.`;
+    return result ;
   }
 }
